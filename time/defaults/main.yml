@@ -1,1 +1,26 @@
+---
+- name: secure the SSH service
+  hosts: webservers
+  become: true
+  become_method: sudo
+  roles:
+      - root_login
+
+---
+# tasks file for root_login
+- name: deactivate PermitRootLogin
+  lineinfile:
+    path: "/etc/ssh/sshd_config"
+    line: "PermitRootLogin no"
+    state: present
+  notify:
+    - restart sshd
+
+
+---
+# handlers file for root_login
+- name: restart ssh
+  service:
+    name: ssh
+    state: restarted
 
